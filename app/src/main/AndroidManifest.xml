@@ -19,6 +19,10 @@
         </activity>
         <activity android:name=".activity.MainActivity"></activity>
 
+        <!--屏幕适配-->
+        <!--屏幕适配 虚拟按键-->
+        <!--屏幕适配  刘海屏-->
+
     </application>
 
 </manifest>

@@ -13,7 +13,7 @@ import com.aiwinn.orange.R;
 /**
  * @data: 2018/7/4
  * @author: ArJun
- * 描述: 屏幕适配，获取基本的屏幕尺寸
+ * 描述: 屏幕适配，获取基本的屏幕尺寸  以及设置 dimen dp px 效果查看
  */
 public class ScreenActivity extends Activity {
 

@@ -1,8 +1,11 @@
 package com.aiwinn.orange.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.aiwinn.orange.R;
@@ -11,6 +14,7 @@ import com.aiwinn.orange.bean.Girl;
 import com.aiwinn.orange.dagger.GirlPrecenterModule;
 import com.aiwinn.orange.presenter.DaggerGirlComponent;
 import com.aiwinn.orange.presenter.GirlPresenter;
+import com.aiwinn.orange.screen_match.ScreenActivity;
 import com.aiwinn.orange.view.IGirlView;
 import com.sj.mycore.net.rx.databus.RxBus;
 
@@ -54,5 +58,14 @@ public class MainActivity extends AppCompatActivity implements IGirlView {
         //model层的数据在girls中返回了
         adapter = new GirlAdapter(this, girls);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(listener);
     }
+
+    AdapterView.OnItemClickListener listener=new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            startActivity(new Intent(MainActivity.this, ScreenActivity.class));
+        }
+    };
+
 }

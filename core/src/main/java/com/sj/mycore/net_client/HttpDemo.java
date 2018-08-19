@@ -49,23 +49,28 @@ public class HttpDemo {
      * @param url 完整接口
      * @param map 键值对集合
      */
-    public void doHttpGet(String url, Map<Object, Object> map, final int requestCode) {
+    public void doHttpGet(String url, Map<Object, Object> map, final int requestCode, final HttpCallBack callBack) {
         Log.i(TAG, "进入doHttpGet: ");
         httpUtils.doGet(url, map, new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.i(TAG, "doHttpGet失败: requestCode=" + requestCode + " ,error " + e);
+            public void onFailure(Call call, final IOException e) {
+                Log.i(TAG, "doHttpPost失败: " + e.toString());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onFailure(e.toString(), requestCode);
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String msg = response.body().string();
-                Log.i(TAG, "doHttpGet成功: " + msg);
+                Log.i(TAG, "doHttpPost" + msg);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.i(TAG, "run: " + requestCode + msg);
-                        callBack.setMsg(msg, requestCode);
+                        callBack.onSuccess(msg, requestCode);
                     }
                 });
             }
@@ -79,22 +84,62 @@ public class HttpDemo {
      * @param url 完整接口
      * @param map 键值对集合
      */
-    public void doHttpPost(String url, Map<Object, Object> map, final int requestCode) {
+    public void doHttpPost(String url, Map<Object, Object> map, final int requestCode, final HttpCallBack callBack) {
         Log.i(TAG, "doHttpPost ");
         httpUtils.doPost(url, map, new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(Call call, final IOException e) {
                 Log.i(TAG, "doHttpPost失败: " + e.toString());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onFailure(e.toString(), requestCode);
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String msg = response.body().string();
-                Log.i("login", "doHttpPost" + msg);
+                Log.i(TAG, "doHttpPost" + msg);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.setMsg(msg, requestCode);
+                        callBack.onSuccess(msg, requestCode);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * post请求
+     *
+     * @param url  完整接口
+     * @param json json格式的参数  ，如　　{"card_id":"541333","card_type":"VISA","gate_number":"0011"}
+     */
+    public void doHttpPost(String url, String json, final int requestCode, final HttpCallBack callBack) {
+        Log.i(TAG, "doHttpPost json");
+        httpUtils.doPost(url, json, new Callback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                Log.i(TAG, "doHttpPost失败: " + e.toString());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onFailure(e.toString(), requestCode);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String msg = response.body().string();
+                Log.i(TAG, "doHttpPost" + msg);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onSuccess(msg, requestCode);
                     }
                 });
             }
@@ -102,7 +147,9 @@ public class HttpDemo {
     }
 
     public interface HttpCallBack {
-        void setMsg(String msg, int requestCode);
+        public void onSuccess(String msg, int requestCode);
+
+        public void onFailure(String msg, int requestCode);
     }
 
 }

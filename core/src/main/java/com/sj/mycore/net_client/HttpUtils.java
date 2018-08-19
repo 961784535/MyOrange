@@ -3,11 +3,14 @@ package com.sj.mycore.net_client;
 import android.util.Log;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 
 /**
@@ -22,6 +25,7 @@ public class HttpUtils {
     public HttpUtils() {
         client = new OkHttpClient();
     }
+
 
     /**
      * get请求
@@ -77,5 +81,25 @@ public class HttpUtils {
                 .build();
         client.newCall(request).enqueue(callback);
     }
+
+    /**
+     * post请求
+     *
+     * @param url      借口url
+     * @param json     json格式的参数  ，如　　{"card_id":"541333","card_type":"VISA","gate_number":"0011"}
+     * @param callback 回调
+     */
+    public void doPost(String url, String json, Callback callback) {
+        Log.i(TAG, "doPost " + url);
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
 
 }
